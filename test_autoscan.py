@@ -1,12 +1,19 @@
+import atexit
 import importlib.machinery
 import importlib.util
 import os
+import shutil
 import tempfile
 import unittest
 
 # autoscan.pyw has no .py extension, so load it explicitly.
-# Importing it runs its startup code (config, temp folder, logging).
-_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "autoscan.pyw")
+# Importing it runs its startup code (reads config.json, creates folders), so load a
+# copy from a temp folder to keep the real config.json untouched.
+_src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "autoscan.pyw")
+_work_dir = tempfile.mkdtemp(prefix="autoscan_test_")
+atexit.register(shutil.rmtree, _work_dir, True)
+_path = os.path.join(_work_dir, "autoscan.pyw")
+shutil.copy(_src, _path)
 _loader = importlib.machinery.SourceFileLoader("autoscan", _path)
 _spec = importlib.util.spec_from_loader("autoscan", _loader)
 autoscan = importlib.util.module_from_spec(_spec)
