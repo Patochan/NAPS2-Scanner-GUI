@@ -7,10 +7,10 @@ A small Tkinter front end for scanning with [NAPS2](https://www.naps2.com/) on W
 - Windows
 - Python 3.8 or newer
 - [NAPS2](https://www.naps2.com/) with at least one scan profile saved in NAPS2
-- Python packages: `pypdf` (or the older `PyPDF2`)
+- Python packages listed in `requirements.txt`
 
 ```bash
-pip install pypdf
+pip install -r requirements.txt
 ```
 
 `tkinter` ships with the standard Python installer on Windows.
