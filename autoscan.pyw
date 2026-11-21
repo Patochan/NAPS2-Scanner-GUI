@@ -430,8 +430,10 @@ class ScanApp:
         self.status_var = tk.StringVar(value="Ready")
 
         # Temporary scan files
-        self.f_tmp = os.path.join(TEMP_DIR, "front_tmp.pdf")
-        self.b_tmp = os.path.join(TEMP_DIR, "back_tmp.pdf")
+        # One folder per window, so two open windows never overwrite each other's scans
+        self.temp_dir = tempfile.mkdtemp(prefix="scan_", dir=TEMP_DIR)
+        self.f_tmp = os.path.join(self.temp_dir, "front_tmp.pdf")
+        self.b_tmp = os.path.join(self.temp_dir, "back_tmp.pdf")
         self.flatbed_tmps = []
 
         self.setup_ui()
@@ -691,7 +693,7 @@ class ScanApp:
                 page_counter = 1
 
                 while True:
-                    current_tmp = os.path.join(TEMP_DIR, f"flatbed_tmp_{page_counter}.pdf")
+                    current_tmp = os.path.join(self.temp_dir, f"flatbed_tmp_{page_counter}.pdf")
                     logging.info(f"Scanning page {page_counter} on flatbed...")
 
                     if self.scan(current_tmp):
@@ -820,3 +822,4 @@ class ScanApp:
 if __name__ == "__main__":
     app = ScanApp()
     app.root.mainloop()
+    shutil.rmtree(app.temp_dir, ignore_errors=True)
