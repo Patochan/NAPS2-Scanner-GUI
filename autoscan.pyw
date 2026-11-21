@@ -160,7 +160,7 @@ def parse_profiles_xml(xml_path):
     """
     actual_path = xml_path
     if not actual_path or not os.path.isfile(actual_path):
-        appdata_path = os.path.join(os.environ.get("APPDATA", ""), "NAPS2", "profiles.xml")
+        appdata_path = DEFAULT_CONFIG["profiles_xml_path"]
         if os.path.isfile(appdata_path):
             actual_path = appdata_path
 
@@ -730,7 +730,7 @@ class ScanApp:
                             break
 
                 if self.flatbed_tmps:
-                    self.process_flatbed_files()
+                    self._save_pdf(lambda: [p for f in self.flatbed_tmps for p in read_pages(f)], self.flatbed_tmps)
 
             else:
                 # ADF: Front side scan, then optional back side scan
@@ -757,18 +757,6 @@ class ScanApp:
 
         finally:
             self.reset()
-
-    def process_flatbed_files(self):
-        """Merges all scanned flatbed pages in chronological order."""
-        logging.info("Processing flatbed files...")
-
-        def build_pages():
-            pages = []
-            for f_path in self.flatbed_tmps:
-                pages += read_pages(f_path)
-            return pages
-
-        return self._save_pdf(build_pages, self.flatbed_tmps)
 
     def process_adf_files(self, has_back):
         """Merges ADF front and back pages with duplex interleaving."""
