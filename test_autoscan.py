@@ -31,6 +31,32 @@ class InterleavePagesTest(unittest.TestCase):
         self.assertEqual(result, ["F1", "B1", "F2"])
 
 
+class ConfigFileTest(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.config_file = os.path.join(tmp.name, "config.json")
+        old_file = autoscan.CONFIG_FILE
+        self.addCleanup(setattr, autoscan, "CONFIG_FILE", old_file)
+        autoscan.CONFIG_FILE = self.config_file
+        autoscan.CONFIG_ERROR = None
+
+    def test_broken_file_is_moved_aside_and_defaults_used(self):
+        with open(self.config_file, "w", encoding="utf-8") as f:
+            f.write("{ broken")
+        config = autoscan.load_config()
+        self.assertEqual(config, autoscan.DEFAULT_CONFIG)
+        self.assertFalse(os.path.exists(self.config_file))
+        self.assertTrue(os.path.exists(self.config_file + ".bad"))
+        self.assertIsNotNone(autoscan.CONFIG_ERROR)
+
+    def test_save_then_load_roundtrip_leaves_no_temp_file(self):
+        data = dict(autoscan.DEFAULT_CONFIG, selected_printer="Printer X")
+        self.assertTrue(autoscan.save_config(data))
+        self.assertEqual(autoscan.load_config()["selected_printer"], "Printer X")
+        self.assertFalse(os.path.exists(self.config_file + ".tmp"))
+
+
 class ParseProfilesXmlTest(unittest.TestCase):
     XML = """<?xml version="1.0"?>
 <ScanProfiles>
