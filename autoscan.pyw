@@ -282,16 +282,7 @@ class ConfigDialog(tk.Toplevel):
         btn_frame = tk.Frame(self, padx=15, pady=12)
         btn_frame.pack(side="bottom", fill="x")
 
-        btn_save = tk.Button(
-            btn_frame,
-            text="Save",
-            command=self.save,
-            bg="#4CAF50",
-            fg="white",
-            font=("Arial", 9, "bold"),
-            width=12,
-            pady=3
-        )
+        btn_save = ttk.Button(btn_frame, text="Save", command=self.save, width=12)
         btn_save.pack(side="right", padx=(8, 0))
 
         btn_cancel = ttk.Button(btn_frame, text="Cancel", command=self.destroy, width=12)
