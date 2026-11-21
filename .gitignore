@@ -1,0 +1,36 @@
+# Local configuration (contains personal paths and printer names)
+config.json
+
+# Shortcut to the scanner app (contains local paths)
+Scan.lnk
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Packaging / build output
+build/
+dist/
+*.spec
+*.egg-info/
+
+# Temporary scan files
+*.tmp
+front_tmp.pdf
+back_tmp.pdf
+flatbed_tmp_*.pdf
+
+# Logs
+*.log
+
+# OS / editor files
+Thumbs.db
+desktop.ini
+.DS_Store
+.idea/
+.vscode/

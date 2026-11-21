@@ -1,0 +1,13 @@
+{
+    "naps2_path": "C:\\Program Files\\NAPS2\\NAPS2.Console.exe",
+    "profiles_xml_path": "C:\\Users\\YOUR_USERNAME\\AppData\\Roaming\\NAPS2\\profiles.xml",
+    "log_file_path": "C:\\Users\\YOUR_USERNAME\\AppData\\Local\\Temp\\ScannerTool\\duplex_scan.log",
+    "log_level": "INFO",
+    "selected_printer": "YOUR SCANNER NAME (as listed in profiles.xml)",
+    "default_duplex": true,
+    "always_on_top": true,
+    "confirm_discard": true,
+    "warn_page_mismatch": true,
+    "hide_console_window": true,
+    "temp_dir": null
+}
