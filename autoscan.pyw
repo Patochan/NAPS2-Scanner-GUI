@@ -699,6 +699,9 @@ class ScanApp:
 
     def start_workflow(self):
         """Initiates the scanning workflow based on selected mode (Flatbed or ADF)."""
+        if not self.profile_var.get():
+            messagebox.showwarning("No Profile", "No scan profile is selected. Check profiles.xml.")
+            return
         self.btn_start.config(state="disabled")
         self.btn_config.config(state="disabled")
 
