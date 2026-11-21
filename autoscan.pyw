@@ -770,12 +770,16 @@ class ScanApp:
         """Merges ADF front and back pages with duplex interleaving."""
         logging.info(f"Processing ADF files (Back pages present: {has_back})...")
 
+        warned = False  # The save may be retried; show the mismatch notice only once
+
         def build_pages():
+            nonlocal warned
             pages_f = read_pages(self.f_tmp)
             pages_b = read_pages(self.b_tmp) if has_back else []
 
             # Plausibility check for mismatched page counts
-            if has_back and self.config.get("warn_page_mismatch", True) and len(pages_f) != len(pages_b):
+            if not warned and has_back and self.config.get("warn_page_mismatch", True) and len(pages_f) != len(pages_b):
+                warned = True
                 logging.warning(f"Page count mismatch: {len(pages_f)} front vs. {len(pages_b)} back pages.")
                 messagebox.showwarning(
                     "Page Count Notice",
