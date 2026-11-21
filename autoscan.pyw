@@ -415,12 +415,12 @@ class ConfigDialog(tk.Toplevel):
 
 class ScanApp:
     def __init__(self):
-        logging.info("Initializing 2NAPS2 Scanner GUI...")
+        logging.info("Initializing NAPS2 Scanner GUI...")
         self.config = load_config()
         self.naps2_path = resolve_naps2_path(self.config.get("naps2_path", ""))
 
         self.root = tk.Tk()
-        self.root.title("2NAPS2 Scanner GUI")
+        self.root.title("NAPS2 Scanner GUI")
         self.root.geometry("460x490")
         apply_window_icon(self.root)
         if self.config.get("always_on_top", True):
