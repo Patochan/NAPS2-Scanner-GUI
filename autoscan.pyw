@@ -69,8 +69,12 @@ DEFAULT_CONFIG = {
 }
 
 
+CONFIG_ERROR = None  # Set when config.json could not be read; shown in the window
+
+
 def load_config():
     """Loads configuration from config.json or returns default values."""
+    global CONFIG_ERROR
     config = dict(DEFAULT_CONFIG)
     if os.path.exists(CONFIG_FILE):
         try:
@@ -79,6 +83,12 @@ def load_config():
                 config.update(saved)
         except Exception as e:
             logging.error(f"Error loading {CONFIG_FILE}: {e}")
+            CONFIG_ERROR = str(e)
+            # Keep the broken file so the user's settings are not overwritten
+            try:
+                os.replace(CONFIG_FILE, CONFIG_FILE + ".bad")
+            except OSError as move_error:
+                logging.error(f"Could not move broken config aside: {move_error}")
     else:
         save_config(config)
     return config
@@ -87,8 +97,11 @@ def load_config():
 def save_config(config_data):
     """Saves the configuration dictionary to config.json."""
     try:
-        with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+        # Write to a temp file first, so a crash mid-save cannot leave config.json empty
+        tmp_file = CONFIG_FILE + ".tmp"
+        with open(tmp_file, "w", encoding="utf-8") as f:
             json.dump(config_data, f, indent=4, ensure_ascii=False)
+        os.replace(tmp_file, CONFIG_FILE)
         logging.info(f"Configuration saved: {CONFIG_FILE}")
         return True
     except Exception as e:
@@ -507,6 +520,9 @@ class ScanApp:
         self.update_printer_dropdown()
         self.update_profiles_ui()
         logging.info("UI successfully initialized.")
+
+        if CONFIG_ERROR:
+            messagebox.showwarning("Config Error", f"config.json could not be read and was renamed to config.json.bad. Default settings are in use.\n\n{CONFIG_ERROR}", parent=self.root)
 
     def update_printer_dropdown(self):
         """Updates the printer list in the dropdown and manages its active/disabled state."""
