@@ -137,11 +137,10 @@ def resolve_naps2_path(path):
 
     candidates = [
         path,
-        r"C:\Program Files\NAPS2\NAPS2.Console.exe",
+        DEFAULT_CONFIG["naps2_path"],
         r"C:\Program Files (x86)\NAPS2\NAPS2.Console.exe",
         os.path.expandvars(r"%LOCALAPPDATA%\Programs\NAPS2\NAPS2.Console.exe"),
         shutil.which("NAPS2.Console.exe"),
-        shutil.which("naps2.console"),
     ]
     for candidate in candidates:
         if candidate and os.path.isfile(candidate):
