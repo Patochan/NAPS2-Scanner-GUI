@@ -10,17 +10,13 @@ import xml.etree.ElementTree as ET
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
-# Compatibility for pypdf and PyPDF2
-try:
-    from pypdf import PdfReader, PdfWriter
-except ImportError:
-    from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 
 
 def load_pdf_reader(file_path):
     """
     Reads a PDF file completely into an in-memory BytesIO buffer.
-    This keeps the stream open for PyPDF2/pypdf during page cloning and writing,
+    This keeps the stream open for pypdf during page cloning and writing,
     while immediately releasing the file lock on disk.
     """
     with open(file_path, "rb") as f:
@@ -250,7 +246,6 @@ class ConfigDialog(tk.Toplevel):
     """Configuration / Settings dialog for paths and options."""
     def __init__(self, parent, config, on_save_callback):
         super().__init__(parent)
-        self.parent = parent
         self.config = dict(config)
         self.on_save_callback = on_save_callback
 
