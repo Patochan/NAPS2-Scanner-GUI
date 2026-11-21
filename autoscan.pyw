@@ -6,6 +6,7 @@ import shutil
 import tempfile
 import logging
 import subprocess
+import time
 import xml.etree.ElementTree as ET
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -439,6 +440,13 @@ class ScanApp:
         self.status_var = tk.StringVar(value="Ready")
 
         # Temporary scan files
+        # Remove folders left behind by crashed sessions (they hold scanned pages)
+        cutoff = time.time() - 24 * 60 * 60
+        for name in os.listdir(TEMP_DIR):
+            path = os.path.join(TEMP_DIR, name)
+            if name.startswith("scan_") and os.path.isdir(path) and os.path.getmtime(path) < cutoff:
+                shutil.rmtree(path, ignore_errors=True)
+
         # One folder per window, so two open windows never overwrite each other's scans
         self.temp_dir = tempfile.mkdtemp(prefix="scan_", dir=TEMP_DIR)
         self.f_tmp = os.path.join(self.temp_dir, "front_tmp.pdf")
