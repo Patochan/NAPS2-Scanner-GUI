@@ -6,6 +6,9 @@ config.json.tmp
 # Shortcut to the scanner app (contains local paths)
 Scan.lnk
 
+# Local setup script (creates the Start Menu shortcut)
+setup.bat
+
 # Python bytecode and caches
 __pycache__/
 *.py[cod]
