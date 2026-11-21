@@ -198,7 +198,6 @@ def parse_profiles_xml(xml_path):
 
             entry = {
                 "display_name": display_name,
-                "source": source_raw,
                 "source_type": source_type,
                 "resolution_dpi": dpi,
                 "label": label,
