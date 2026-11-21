@@ -66,6 +66,7 @@ DEFAULT_CONFIG = {
 
 
 CONFIG_ERROR = None  # Set when config.json could not be read; shown in the window
+SCAN_TIMEOUT_SECONDS = 600  # Long multi-page batches can take minutes; stop a hung NAPS2 after this
 
 
 def load_config():
@@ -668,7 +669,8 @@ class ScanApp:
                 capture_output=True,
                 text=True,
                 encoding="utf-8",
-                creationflags=creationflags
+                creationflags=creationflags,
+                timeout=SCAN_TIMEOUT_SECONDS
             )
 
             if result.returncode == 0:
@@ -684,6 +686,10 @@ class ScanApp:
                 else:
                     messagebox.showerror("Scan Error", f"NAPS2 Error:\n{stdout_text}\n{stderr_text}")
                 return False
+        except subprocess.TimeoutExpired:
+            logging.error(f"NAPS2 did not finish within {SCAN_TIMEOUT_SECONDS} seconds.")
+            messagebox.showerror("Scan Timeout", "NAPS2 did not finish in time. Check the scanner and try again.")
+            return False
         except Exception as e:
             logging.exception("Exception during scan operation:")
             messagebox.showerror("System Error", str(e))
