@@ -84,7 +84,8 @@ def load_config():
             CONFIG_ERROR = str(e)
             # Keep the broken file so the user's settings are not overwritten
             try:
-                os.replace(CONFIG_FILE, CONFIG_FILE + ".bad")
+                # Timestamped name, so an earlier broken copy is not overwritten
+                os.replace(CONFIG_FILE, f"{CONFIG_FILE}.{time.strftime('%Y%m%d-%H%M%S')}.bad")
             except OSError as move_error:
                 logging.error(f"Could not move broken config aside: {move_error}")
     else:
@@ -524,7 +525,7 @@ class ScanApp:
         logging.info("UI successfully initialized.")
 
         if CONFIG_ERROR:
-            messagebox.showwarning("Config Error", f"config.json could not be read and was renamed to config.json.bad. Default settings are in use.\n\n{CONFIG_ERROR}", parent=self.root)
+            messagebox.showwarning("Config Error", f"config.json could not be read. It was kept as a .bad file next to it, and default settings are in use.\n\n{CONFIG_ERROR}", parent=self.root)
 
     def update_printer_dropdown(self):
         """Updates the printer list in the dropdown and manages its active/disabled state."""

@@ -1,6 +1,6 @@
 # Local configuration (contains personal paths and printer names)
 config.json
-config.json.bad
+config.json.*.bad
 config.json.tmp
 
 # Shortcut to the scanner app (contains local paths)

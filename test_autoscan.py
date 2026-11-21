@@ -1,4 +1,5 @@
 import atexit
+import glob
 import importlib.machinery
 import importlib.util
 import os
@@ -47,7 +48,7 @@ class ConfigFileTest(unittest.TestCase):
         config = autoscan.load_config()
         self.assertEqual(config, autoscan.DEFAULT_CONFIG)
         self.assertFalse(os.path.exists(self.config_file))
-        self.assertTrue(os.path.exists(self.config_file + ".bad"))
+        self.assertEqual(len(glob.glob(self.config_file + ".*.bad")), 1)
         self.assertIsNotNone(autoscan.CONFIG_ERROR)
 
     def test_save_then_load_roundtrip_leaves_no_temp_file(self):
