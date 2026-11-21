@@ -771,34 +771,33 @@ class ScanApp:
 
     def _save_pdf(self, build_pages, temp_files):
         """Asks for a file name, writes the pages from build_pages(), then deletes temp_files."""
-        save_path = filedialog.asksaveasfilename(
-            defaultextension=".pdf",
-            filetypes=[("PDF Document", "*.pdf")]
-        )
+        while True:
+            save_path = filedialog.asksaveasfilename(
+                defaultextension=".pdf",
+                filetypes=[("PDF Document", "*.pdf")]
+            )
 
-        if not save_path:
-            if self.config.get("confirm_discard", True):
-                if not messagebox.askyesno("Discard Scan?", "Do you really want to discard the scanned pages?"):
-                    logging.info("Save cancelled; keeping temp files for another attempt.")
-                    return False
-            self._cleanup_files(temp_files)
-            return False
+            if not save_path:
+                if self.config.get("confirm_discard", True) and not messagebox.askyesno("Discard Scan?", "Do you really want to discard the scanned pages?"):
+                    logging.info("Save cancelled; asking for a file name again.")
+                    continue
+                self._cleanup_files(temp_files)
+                return False
 
-        try:
-            writer = PdfWriter()
-            for page in build_pages():
-                writer.add_page(page)
-            with open(save_path, "wb") as f_out:
-                writer.write(f_out)
+            try:
+                writer = PdfWriter()
+                for page in build_pages():
+                    writer.add_page(page)
+                with open(save_path, "wb") as f_out:
+                    writer.write(f_out)
 
-            logging.info(f"PDF successfully saved: {save_path}")
-            messagebox.showinfo("Success", "PDF created successfully!")
-            self._cleanup_files(temp_files)
-            return True
-        except Exception as e:
-            logging.exception("Error merging PDF files:")
-            messagebox.showerror("Merge Error", f"Error merging PDF files:\n{str(e)}")
-            return False
+                logging.info(f"PDF successfully saved: {save_path}")
+                messagebox.showinfo("Success", "PDF created successfully!")
+                self._cleanup_files(temp_files)
+                return True
+            except Exception as e:
+                logging.exception("Error merging PDF files:")
+                messagebox.showerror("Merge Error", f"Error merging PDF files:\n{str(e)}\n\nPlease choose another file name.")
 
     def _cleanup_files(self, file_paths):
         """Safely deletes temporary scan files."""
