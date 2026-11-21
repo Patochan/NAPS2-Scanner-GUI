@@ -21,12 +21,6 @@ dist/
 *.spec
 *.egg-info/
 
-# Temporary scan files
-*.tmp
-front_tmp.pdf
-back_tmp.pdf
-flatbed_tmp_*.pdf
-
 # Logs
 *.log
 
