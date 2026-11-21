@@ -25,6 +25,8 @@ pip install -r requirements.txt
    - `log_file_path`: where the log is written
 3. Start the app.
 
+Optional: run `add_to_startmenu.bat` once to add a "Scan" entry to your Start Menu. Run it again if you move the project folder.
+
 If `config.json` is missing, the app creates it with default values. Most options can also be changed in the app via **⚙ Configure**.
 
 ## Usage
